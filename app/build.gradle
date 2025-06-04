@@ -1,0 +1,250 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
+    id 'kotlin-parcelize'
+}
+
+android {
+    compileSdkVersion 34
+    
+    defaultConfig {
+        applicationId "com.boltgame.brickbreakerroguelite"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode 1
+        versionName "1.0"
+        
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // Enable vector drawable support for older devices
+        vectorDrawables.useSupportLibrary = true
+        
+        // Optimize APK size
+        resConfigs "en", "xxhdpi"
+        
+        // Enable multidex for large applications
+        multiDexEnabled true
+        
+        // NDK optimizations
+        ndk {
+            abiFilters 'arm64-v8a', 'armeabi-v7a'
+        }
+    }
+    
+    buildTypes {
+        debug {
+            debuggable true
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            
+            // Performance debugging
+            buildConfigField "boolean", "ENABLE_LOGGING", "true"
+            buildConfigField "boolean", "ENABLE_STRICT_MODE", "true"
+        }
+        
+        release {
+            debuggable false
+            minifyEnabled true
+            shrinkResources true
+            zipAlignEnabled true
+            
+            // Use R8 for optimal code shrinking and obfuscation
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            
+            // Performance optimizations
+            buildConfigField "boolean", "ENABLE_LOGGING", "false"
+            buildConfigField "boolean", "ENABLE_STRICT_MODE", "false"
+            
+            // Signing configuration
+            signingConfig signingConfigs.debug // Replace with release signing config
+        }
+        
+        benchmark {
+            initWith release
+            matchingFallbacks = ['release']
+            debuggable false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.debug
+        }
+    }
+    
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+        
+        // Enable incremental compilation
+        incremental true
+    }
+    
+    kotlinOptions {
+        jvmTarget = '1.8'
+        
+        // Kotlin compiler optimizations
+        freeCompilerArgs += [
+            '-Xjsr305=strict',
+            '-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi',
+            '-Xopt-in=kotlin.RequiresOptIn'
+        ]
+    }
+    
+    buildFeatures {
+        viewBinding true
+        buildConfig true
+        
+        // Disable unused features for performance
+        aidl false
+        renderScript false
+        shaders false
+    }
+    
+    // Packaging optimizations
+    packagingOptions {
+        resources {
+            excludes += [
+                '/META-INF/{AL2.0,LGPL2.1}',
+                '/META-INF/DEPENDENCIES',
+                '/META-INF/LICENSE',
+                '/META-INF/LICENSE.txt',
+                '/META-INF/license.txt',
+                '/META-INF/NOTICE',
+                '/META-INF/NOTICE.txt',
+                '/META-INF/notice.txt',
+                '/META-INF/ASL2.0',
+                '/META-INF/*.kotlin_module'
+            ]
+        }
+    }
+    
+    // Lint optimizations
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        disable 'MissingTranslation'
+        
+        // Performance-related lint checks
+        enable 'TypographyDashes', 'TypographyQuotes'
+        warning 'InvalidPackage'
+    }
+    
+    // Dex options for build performance
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries true
+    }
+    
+    // Bundle configuration for app bundles
+    bundle {
+        language {
+            enableSplit = true
+        }
+        density {
+            enableSplit = true
+        }
+        abi {
+            enableSplit = true
+        }
+    }
+}
+
+// Dependency resolution strategy for consistent versions
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core-ktx:1.9.0'
+        force 'org.jetbrains.kotlin:kotlin-stdlib:1.8.0'
+        
+        // Cache dynamic versions for 24 hours
+        cacheDynamicVersionsFor 24, 'hours'
+        cacheChangingModulesFor 24, 'hours'
+    }
+}
+
+dependencies {
+    // Core Android - Latest stable versions
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
+    implementation 'androidx.activity:activity-ktx:1.7.1'
+    implementation 'androidx.fragment:fragment-ktx:1.5.7'
+    
+    // Navigation
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
+    
+    // Multidex support
+    implementation 'androidx.multidex:multidex:2.0.1'
+    
+    // Physics engine - Optimized for mobile
+    implementation 'org.dyn4j:dyn4j:4.2.1'
+    
+    // Coroutines - Performance optimized
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    
+    // Firebase - Only necessary modules
+    implementation platform('com.google.firebase:firebase-bom:32.1.1')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-crashlytics-ktx'
+    implementation 'com.google.firebase:firebase-performance-ktx'
+    implementation 'com.google.firebase:firebase-config-ktx'
+    
+    // Ads - Latest version for better performance
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+    
+    // In-app purchases - Latest billing library
+    implementation 'com.android.billingclient:billing:5.2.1'
+    implementation 'com.android.billingclient:billing-ktx:5.2.1'
+    
+    // Cloud backend - Optimized versions
+    implementation 'io.github.jan-tennert.supabase:postgrest-kt:1.4.7'
+    implementation 'io.github.jan-tennert.supabase:storage-kt:1.4.7'
+    implementation 'io.github.jan-tennert.supabase:gotrue-kt:1.4.7'
+    implementation 'io.ktor:ktor-client-android:2.3.1'
+    
+    // Dependency injection - Lightweight and fast
+    implementation 'io.insert-koin:koin-android:3.4.0'
+    implementation 'io.insert-koin:koin-androidx-navigation:3.4.0'
+    
+    // Image loading - Memory efficient
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    kapt 'com.github.bumptech.glide:compiler:4.15.1'
+    
+    // Performance monitoring
+    implementation 'androidx.benchmark:benchmark-common:1.1.1'
+    
+    // Memory leak detection (debug builds only)
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.11'
+    
+    // Performance profiling
+    debugImplementation 'com.facebook.flipper:flipper:0.201.0'
+    debugImplementation 'com.facebook.soloader:soloader:0.10.5'
+    debugImplementation 'com.facebook.flipper:flipper-network-plugin:0.201.0'
+    
+    // Testing - Optimized test dependencies
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    testImplementation 'app.cash.turbine:turbine:0.13.0'
+    testImplementation 'io.mockk:mockk:1.13.5'
+    
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.benchmark:benchmark-junit4:1.1.1'
+}
+
+// Performance optimizations
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("compile")) {
+        task.options.incremental = true
+    }
+}
+
+// Gradle performance optimizations
+gradle.startParameter.parallel = true
+gradle.startParameter.configureondemand = true

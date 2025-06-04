@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Brickbreaker Roguelite</string>
+    
+    <!-- Game UI -->
+    <string name="score">Score: %1$d</string>
+    <string name="level">Level: %1$d</string>
+    <string name="lives">Lives: %1$d</string>
+    
+    <!-- Home Screen -->
+    <string name="start_game">Start Game</string>
+    <string name="upgrades">Upgrades</string>
+    <string name="shop">Shop</string>
+    <string name="settings">Settings</string>
+    
+    <!-- Game Over -->
+    <string name="game_over">Game Over</string>
+    <string name="final_score">Score: %1$d</string>
+    <string name="retry">Retry</string>
+    <string name="watch_ad">Watch Ad for Bonus</string>
+    <string name="main_menu">Main Menu</string>
+    
+    <!-- Upgrades -->
+    <string name="upgrade_paddle">Upgrade Paddle</string>
+    <string name="upgrade_ball">Upgrade Ball</string>
+    <string name="upgrade_lives">Upgrade Lives</string>
+    
+    <!-- Shop -->
+    <string name="buy">Buy</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="coin_pack_small">Small Coin Pack</string>
+    <string name="coin_pack_medium">Medium Coin Pack</string>
+    <string name="coin_pack_large">Large Coin Pack</string>
+</resources>
