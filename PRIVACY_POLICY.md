@@ -68,8 +68,7 @@ We implement appropriate security measures to protect your information against u
 ## Contact Us
 
 If you have questions about this Privacy Policy, contact us at:
-- **Email**: [your-email@domain.com]
-- **Address**: [Your Company Address]
+- **Email**: dannydoan00@gmail.com
 
 ## Changes to This Policy
 
